@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Form Verifikasi Data</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #eef2f7;
+}
+
+.container {
+    width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+<h2>FORM VERIFIKASI DATA</h2>
+
+<input type="text" id="nama" placeholder="Nama">
+<input type="text" id="nik" placeholder="NIK">
+<input type="text" id="kk" placeholder="No KK">
+<textarea id="alamat" placeholder="Alamat"></textarea>
+
+<div class="actions">
+    <button onclick="tambahData()">Simpan</button>
+    <button onclick="exportExcel()">Export Excel</button>
+</div>
+
+<table id="tabel">
+<thead>
+<tr>
+<th>Nama</th>
+<th>NIK</th>
+<th>No KK</th>
+<th>Alamat</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+</div>
+
+<script>
+let data = [];
+
+function tambahData() {
+    let nama = document.getElementById("nama").value;
+    let nik = document.getElementById("nik").value;
+    let kk = document.getElementById("kk").value;
+    let alamat = document.getElementById("alamat").value;
+
+    if(nama=="" || nik=="" || kk=="" || alamat==""){
+        alert("Semua data wajib diisi!");
+        return;
+    }
+
+    let obj = {nama, nik, kk, alamat};
+    data.push(obj);
+    tampilkan();
+
+    document.getElementById("nama").value="";
+    document.getElementById("nik").value="";
+    document.getElementById("kk").value="";
+    document.getElementById("alamat").value="";
+}
+
+function tampilkan(){
+    let tbody = document.querySelector("#tabel tbody");
+    tbody.innerHTML = "";
+
+    data.forEach((d, i) => {
+        let row = `
+        <tr>
+            <td>${d.nama}</td>
+            <td>${d.nik}</td>
+            <td>${d.kk}</td>
+            <td>${d.alamat}</td>
+            <td>
+                <button onclick="hapus(${i})">Hapus</button>
+            </td>
+        </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+}
+
+function hapus(i){
+    data.splice(i,1);
+    tampilkan();
+}
+
+function exportExcel(){
+    let table = document.getElementById("tabel").outerHTML;
+    let url = 'data:application/vnd.ms-excel,' + encodeURIComponent(table);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "data_verifikasi.xls";
+    a.click();
+}
+</script>
+
+</body>
+</html>
